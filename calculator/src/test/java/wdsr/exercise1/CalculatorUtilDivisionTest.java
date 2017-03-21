@@ -2,9 +2,7 @@ package wdsr.exercise1;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
@@ -27,9 +25,16 @@ public class CalculatorUtilDivisionTest {
 		calcUtil = new CalculatorUtil(calculator);
 	}
 	
-	@Test
+	@Test(expected=IllegalArgumentException.class)
 	public void test16dividedBy4() {
-		fail("Not yet implemented");
+		// given
+		doThrow(new IllegalArgumentException()).when(calculator).divide(anyInt(),eq(4));
+
+		// when
+		calcUtil.getDivisionText(16, 4);
+		
+		// then
+		// empty - exception expected
 	}		
 
 	@Test(expected=IllegalArgumentException.class)
@@ -42,5 +47,18 @@ public class CalculatorUtilDivisionTest {
 		
 		// then
 		// empty - exception expected
+	}
+
+	@Test
+	public void test20dividedBy18() {
+		// given
+		doReturn(1.11).when(calculator).divide(anyInt(), anyInt());
+
+		// when
+		String result = calcUtil.getDivisionText(20, 18);
+
+		// then
+		assertThat("20 / 18 = 1.11", is(equalTo(result)));
+		verify(calculator).divide(anyInt(), anyInt());
 	}
 }
